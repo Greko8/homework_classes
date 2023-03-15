@@ -29,17 +29,23 @@ class Student:
     def __str__(self):
         return f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашнее задание: {self.average_grade()}\nКурсы в процессе изучения: {",".join(self.courses_in_progress)}\nЗавершенные курсы: {",".join(self.finished_courses)}'
 
-    def compare(self, opponent):
-        if isinstance(opponent, Student):
-            if self.average_grade() > opponent.average_grade():
-                result = f"Средняя оценка {self.name} {self.surname} выше чем средняя оценка {opponent.name} {opponent.surname}"
-            elif self.average_grade() < opponent.average_grade():
-                result = f"Средняя оценка {self.name} {self.surname} ниже чем средняя оценка {opponent.name} {opponent.surname}"
-            else:
-                result = "Оценки одинаковые"
-            print(result)
-        else:
-            print("ошибка")
+    def __lt__(self, student):
+        if not isinstance(student, Student):
+            print('Ошибка: это не студент!')
+            return
+        return self.average_grade() < student.average_grade()
+
+    def __gt__(self, student):
+        if not isinstance(student, Student):
+            print('Ошибка: это не студент!')
+            return
+        return self.average_grade() > student.average_grade()
+
+    def __eq__(self, student):
+        if not isinstance(student, Student):
+            print('Ошибка: это не студент!')
+            return
+        return self.average_grade() == student.average_grade()
 
 class Mentor:
     def __init__(self, name, surname):
@@ -61,23 +67,29 @@ class Lecturer(Mentor):
                 aver += sum(value) / len(value)
             a_grade = aver / len(self.grades)
         else:
-            a_grade = "нет оценок"
+            a_grade = 0
         return a_grade
 
     def __str__(self):
         return f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.average_grade()}'
 
-    def compare(self, opponent):
-        if isinstance(opponent, Lecturer):
-            if self.average_grade() > opponent.average_grade():
-                result = f"Средняя оценка {self.name} {self.surname} выше чем средняя оценка {opponent.name} {opponent.surname}"
-            elif self.average_grade() < opponent.average_grade():
-                result = f"Средняя оценка {self.name} {self.surname} ниже чем средняя оценка {opponent.name} {opponent.surname}"
-            else:
-                result = "Оценки одинаковые"
-            print(result)
-        else:
-            print("ошибка")
+    def __lt__(self, lector):
+        if not isinstance(lector, Lecturer):
+            print('Ошибка: это не лектор!')
+            return
+        return self.average_grade() < lector.average_grade()
+
+    def __gt__(self, lector):
+        if not isinstance(lector, Lecturer):
+            print('Ошибка: это не лектор!')
+            return
+        return self.average_grade() > lector.average_grade()
+
+    def __eq__(self, lector):
+        if not isinstance(lector, Lecturer):
+            print('Ошибка: это не лектор!')
+            return
+        return self.average_grade() == lector.average_grade()
 
 
 class Reviewer(Mentor):
@@ -177,9 +189,12 @@ print(reviewer1)
 print(lecturer1)
 print(student_1)
 
-
-lecturer2.compare(lecturer1)
-student_1.compare(student_2)
+print(lecturer1.__lt__(lecturer2))
+print(lecturer1.__gt__(lecturer2))
+print(lecturer1.__eq__(lecturer2))
+print(student_1.__lt__(student_2))
+print(student_1.__gt__(student_2))
+print(student_1.__eq__(student_2))
 
 print(aver_grade_students([student_1, student_2], 'Api'))
 print(aver_grade_lecturers([lecturer1, lecturer2], 'Python'))
